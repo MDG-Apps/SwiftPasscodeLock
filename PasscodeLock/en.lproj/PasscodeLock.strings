@@ -28,3 +28,9 @@
 
 /* Touch ID Reason */
 "PasscodeLockTouchIDReason" = "Authentication required to proceed";
+
+/* Delete Button */
+"Delete" = "Delete";
+
+/* TouchID Button */
+"Use TouchID" = "Use TouchID";

@@ -9,20 +9,16 @@
 import UIKit
 import PasscodeLock
 
-class PasscodeSettingsViewController: UIViewController {
+class PasscodeSettingsViewController: UITableViewController {
     
-    @IBOutlet weak var passcodeSwitch: UISwitch!
-    @IBOutlet weak var changePasscodeButton: UIButton!
-    @IBOutlet weak var testTextField: UITextField!
-    @IBOutlet weak var testActivityButton: UIButton!
-    
+    var InSetup = false
     private let configuration: PasscodeLockConfigurationType
     
     init(configuration: PasscodeLockConfigurationType) {
         
         self.configuration = configuration
         
-        super.init(nibName: nil, bundle: nil)
+        super.init(style: .Grouped)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -41,69 +37,72 @@ class PasscodeSettingsViewController: UIViewController {
         updatePasscodeView()
     }
     
-    func updatePasscodeView() {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        let hasPasscode = configuration.repository.hasPasscode
-        
-        changePasscodeButton.hidden = !hasPasscode
-        passcodeSwitch.on = hasPasscode
+        return 2
     }
     
-    // MARK: - Actions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if InSetup {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "done")
+        }
+        self.title = "Passcode-Sperre".localized()
+    }
     
-    @IBAction func passcodeSwitchValueChange(sender: UISwitch) {
-        
-        let passcodeVC: PasscodeLockViewController
-        
-        if passcodeSwitch.on {
-            
-            passcodeVC = PasscodeLockViewController(state: .SetPasscode, configuration: configuration)
-            
-        } else {
-            
-            passcodeVC = PasscodeLockViewController(state: .RemovePasscode, configuration: configuration)
-            
-            passcodeVC.successCallback = { lock in
-                
-                lock.repository.deletePasscode()
+    @IBAction func done() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+        cell.textLabel?.textAlignment = .Center
+        let hasPasscode = configuration.repository.hasPasscode
+        switch indexPath.row {
+        case 0:
+            if hasPasscode {
+                cell.textLabel?.text = "Code-Sperre deaktivieren".localized()
+            } else {
+                cell.textLabel?.text = "Code-Sperre aktivieren".localized()
+            }
+        default:
+            cell.textLabel?.text = "Code ändern".localized()
+            cell.userInteractionEnabled = hasPasscode
+            if !hasPasscode {
+                cell.textLabel?.textColor = UIColor.grayColor()
             }
         }
-        
-        presentViewController(passcodeVC, animated: true, completion: nil)
+        return cell
     }
     
-    @IBAction func changePasscodeButtonTap(sender: UIButton) {
-        
-        let repo = UserDefaultsPasscodeRepository()
-        let config = PasscodeLockConfiguration(repository: repo)
-        
-        let passcodeLock = PasscodeLockViewController(state: .ChangePasscode, configuration: config)
-        
-        presentViewController(passcodeLock, animated: true, completion: nil)
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let hasPasscode = configuration.repository.hasPasscode
+        switch indexPath.row {
+        case 0:
+            let passcodeVC: PasscodeLockViewController
+            if !hasPasscode {
+                passcodeVC = PasscodeLockViewController(state: .SetPasscode, configuration: configuration)
+            } else {
+                
+                passcodeVC = PasscodeLockViewController(state: .RemovePasscode, configuration: configuration)
+                
+                passcodeVC.successCallback = { lock in
+                    
+                    lock.repository.deletePasscode()
+                }
+            }
+            presentViewController(passcodeVC, animated: true, completion: nil)
+        default:
+            let repo = UserDefaultsPasscodeRepository()
+            let config = PasscodeLockConfiguration(repository: repo)
+            
+            let passcodeLock = PasscodeLockViewController(state: .ChangePasscode, configuration: config)
+            
+            presentViewController(passcodeLock, animated: true, completion: nil)
+        }
     }
     
-    @IBAction func testAlertButtonTap(sender: UIButton) {
-        
-        let alertVC = UIAlertController(title: "Test", message: "", preferredStyle: .Alert)
-        
-        alertVC.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        
-        presentViewController(alertVC, animated: true, completion: nil)
-        
-    }
-    
-    @IBAction func testActivityButtonTap(sender: UIButton) {
-        
-        let activityVC = UIActivityViewController(activityItems: ["Test"], applicationActivities: nil)
-        
-        activityVC.popoverPresentationController?.sourceView = testActivityButton
-        activityVC.popoverPresentationController?.sourceRect = CGRectMake(10, 20, 0, 0)
-        
-        presentViewController(activityVC, animated: true, completion: nil)
-    }
-    
-    @IBAction func dismissKeyboard() {
-        
-        testTextField.resignFirstResponder()
+    func updatePasscodeView() {
+        tableView.reloadData()
     }
 }
