@@ -34,3 +34,6 @@
 
 /* TouchID Button */
 "Use TouchID" = "Use TouchID";
+
+/* Touch ID Fallback Button */
+"PasscodeLockTouchIDButton" = "Enter Passcode";

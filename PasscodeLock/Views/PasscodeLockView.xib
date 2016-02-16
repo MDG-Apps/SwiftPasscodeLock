@@ -14,10 +14,10 @@
                 <outlet property="titleLabel" destination="1wK-Ol-7mm" id="FOM-sv-dOO"/>
                 <outlet property="touchIDButton" destination="0Ph-dj-v7R" id="ifL-gW-Ttr"/>
                 <outlet property="view" destination="iN0-l3-epB" id="4dc-hJ-geg"/>
-                <outletCollection property="placeholders" destination="w14-Kb-Jnf" id="OYC-Bu-Hqb"/>
-                <outletCollection property="placeholders" destination="OSf-H5-f20" id="obm-Mr-bfV"/>
-                <outletCollection property="placeholders" destination="9Tg-dE-gH4" id="Ibn-yD-bTx"/>
-                <outletCollection property="placeholders" destination="Fhs-1e-Ysl" id="Z1f-Co-EB8"/>
+                <outletCollection property="placeholders" destination="w14-Kb-Jnf" collectionClass="NSMutableArray" id="OYC-Bu-Hqb"/>
+                <outletCollection property="placeholders" destination="OSf-H5-f20" collectionClass="NSMutableArray" id="obm-Mr-bfV"/>
+                <outletCollection property="placeholders" destination="9Tg-dE-gH4" collectionClass="NSMutableArray" id="Ibn-yD-bTx"/>
+                <outletCollection property="placeholders" destination="Fhs-1e-Ysl" collectionClass="NSMutableArray" id="Z1f-Co-EB8"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
