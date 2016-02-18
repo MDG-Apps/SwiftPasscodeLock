@@ -14,7 +14,7 @@ s.source_files = 'PasscodeLock/*.{h,swift}',
 
 s.resources = [
 				'PasscodeLock/Views/PasscodeLockView.xib',
-				'PasscodeLock/*.lproj'
+				'PasscodeLock/*.lproj/*.strings'
 			  ]
 
 s.requires_arc = true
